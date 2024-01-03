@@ -1,0 +1,653 @@
+import com.formdev.flatlaf.FlatDarculaLaf;
+import prjct.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import javax.swing.JOptionPane;
+import javax.swing.Timer;
+import javax.swing.UIManager;
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ *
+ * @author LENOVO
+ */
+public class main_quiz extends javax.swing.JFrame {
+public String QuestionID="1";
+public String answer;
+public String StudentID;
+public int min=0;
+public int sec=0;
+public int marks=0;
+
+public void answerCheck()
+{
+    String studentanswer="";
+    if (jRadioButton1.isSelected())
+    {
+        studentanswer=jRadioButton1.getText();
+    }
+    else if (jRadioButton2.isSelected())
+    {
+        studentanswer=jRadioButton2.getText();
+    } 
+     else if (jRadioButton3.isSelected())
+    {
+        studentanswer=jRadioButton3.getText();
+    } 
+     else 
+    {
+        studentanswer=jRadioButton4.getText();
+    } 
+    
+    if(studentanswer.equals(answer)){
+    marks=marks+1;
+    String marks1= String.valueOf(marks);
+    in_marks.setText(marks1);
+    }
+    
+    //question id change
+    int QuestionID1=Integer.parseInt(QuestionID);
+    QuestionID1=QuestionID1+1;
+    QuestionID=String.valueOf(QuestionID1);
+    
+    jRadioButton1.setSelected(false);
+    jRadioButton2.setSelected(false);
+    jRadioButton3.setSelected(false);
+    jRadioButton4.setSelected(false);
+    
+    //if question no exceed to 10
+    if(QuestionID.equals("10")){
+    jButton1.setVisible(false);
+    }
+}
+
+public void question(){
+       try{
+           
+            ResultSet rs1=select.getData("select *from quiz where QuestionID='"+QuestionID+"'");
+            while(rs1.next())
+            {
+            in_quesNo.setText(rs1.getString(1));
+            in_mainques.setText(rs1.getString(3));
+            jRadioButton1.setText(rs1.getString(4));
+            jRadioButton2.setText(rs1.getString(5));
+            jRadioButton3.setText(rs1.getString(6));
+            jRadioButton4.setText(rs1.getString(7));
+            answer=rs1.getString(8);
+            }
+        
+        
+        }
+        catch(Exception e){
+            JOptionPane.showMessageDialog(null, e);
+        }
+}
+public void submit()
+{
+    StudentID=in_stID.getText();
+    answerCheck();
+    try{
+     String Query;
+            Query="update student set marks='"+marks+"'where StudentID='"+StudentID+"'";
+            String mark1=String.valueOf(marks);
+            insertupdatedelete.setdata(Query, "Quiz Submitted Successfully");
+            new Quiz_result(StudentID).setVisible(true);
+          
+    }
+    catch(Exception e){
+    JOptionPane.showMessageDialog(null,e);
+    }
+    
+}
+
+/**
+     * Creates new form Quizes
+     */
+    public main_quiz() {
+        initComponents();
+    }
+    Timer time;
+    public main_quiz( String Student_ID) {
+        initComponents();
+         in_stID.setText(Student_ID);
+        //date
+        SimpleDateFormat dformat=new SimpleDateFormat("dd-MM-yyyy");
+        Date date=new Date();
+        in_date.setText(dformat.format(date));
+        try{
+            ResultSet rs=select.getData("select *from student where StudentID='"+Student_ID+"'");
+            while(rs.next())
+            {
+            in_Stname.setText(rs.getString(4));
+            }
+            ResultSet rs1=select.getData("select *from quiz where QuestionID='"+QuestionID+"'");
+            while(rs1.next())
+            {
+            in_quesNo.setText(rs1.getString(1));
+            in_mainques.setText(rs1.getString(3));
+            jRadioButton1.setText(rs1.getString(4));
+            jRadioButton2.setText(rs1.getString(5));
+            jRadioButton3.setText(rs1.getString(6));
+            jRadioButton4.setText(rs1.getString(7));
+            answer=rs1.getString(8);
+            }
+        
+        
+        }
+        catch(Exception e){
+            JOptionPane.showMessageDialog(null, e);
+        }
+       
+        setLocationRelativeTo(this);
+        time=new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+           in_sec.setText(String.valueOf(sec));
+           in_min.setText(String.valueOf(min));
+           
+           if(sec==60)
+           {
+           sec=0;
+           min++;
+                   if(min==1)
+                   {
+                 time.stop(); 
+                 answerCheck();
+                 submit();
+                    }
+                }
+            sec++;
+           }
+        });
+    time.start();
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jPanel1 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        in_date = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        in_min = new javax.swing.JLabel();
+        in_sec = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        jSeparator1 = new javax.swing.JSeparator();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        in_stID = new javax.swing.JLabel();
+        in_Stname = new javax.swing.JLabel();
+        in_totalques = new javax.swing.JLabel();
+        in_quesNo = new javax.swing.JLabel();
+        in_marks = new javax.swing.JLabel();
+        jPanel4 = new javax.swing.JPanel();
+        in_mainques = new javax.swing.JLabel();
+        jRadioButton1 = new javax.swing.JRadioButton();
+        jRadioButton2 = new javax.swing.JRadioButton();
+        jRadioButton3 = new javax.swing.JRadioButton();
+        jRadioButton4 = new javax.swing.JRadioButton();
+        jButton2 = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jPanel2.setBackground(new java.awt.Color(51, 204, 255));
+
+        jLabel2.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel2.setText("Date :");
+
+        in_date.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        in_date.setForeground(new java.awt.Color(255, 255, 255));
+        in_date.setText("dd-mm-yyyy");
+
+        jLabel4.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel4.setText("Total Time :");
+
+        jLabel5.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel5.setText("10 Min");
+
+        jLabel6.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel6.setText("Time Taken :");
+
+        in_min.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        in_min.setForeground(new java.awt.Color(255, 255, 255));
+        in_min.setText("00");
+
+        in_sec.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        in_sec.setForeground(new java.awt.Color(255, 255, 255));
+        in_sec.setText("00");
+
+        jLabel9.setFont(new java.awt.Font("Times New Roman", 1, 48)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel9.setText("Welcome");
+
+        jLabel3.setFont(new java.awt.Font("Stencil", 0, 48)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel3.setText("JDemy");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addComponent(jLabel9)
+                .addGap(250, 250, 250)
+                .addComponent(jLabel3)
+                .addGap(289, 289, 289)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addGap(12, 12, 12)
+                        .addComponent(in_date))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel6))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel5)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(in_min)
+                                .addGap(6, 6, 6)
+                                .addComponent(in_sec)))))
+                .addContainerGap(40, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel9)
+                        .addComponent(jLabel3))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel4)
+                                .addGap(3, 3, 3)
+                                .addComponent(jLabel6))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel5)
+                                .addGap(3, 3, 3)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(in_min)
+                                    .addComponent(in_sec))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(in_date)))))
+        );
+
+        jPanel3.setBackground(new java.awt.Color(51, 204, 255));
+
+        jSeparator1.setBackground(new java.awt.Color(102, 102, 102));
+        jSeparator1.setForeground(new java.awt.Color(102, 102, 102));
+
+        jLabel10.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        jLabel10.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel10.setText("Student ID :");
+
+        jLabel11.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        jLabel11.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel11.setText("Student Name :");
+
+        jLabel12.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        jLabel12.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel12.setText("Total Questions :");
+
+        jLabel13.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        jLabel13.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel13.setText("Question No :");
+
+        jLabel14.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        jLabel14.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel14.setText("Your Marks : ");
+
+        in_stID.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        in_stID.setForeground(new java.awt.Color(255, 255, 255));
+        in_stID.setText("00");
+
+        in_Stname.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        in_Stname.setForeground(new java.awt.Color(255, 255, 255));
+        in_Stname.setText("ABC");
+
+        in_totalques.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        in_totalques.setForeground(new java.awt.Color(255, 255, 255));
+        in_totalques.setText("10");
+
+        in_quesNo.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        in_quesNo.setForeground(new java.awt.Color(255, 255, 255));
+        in_quesNo.setText("00");
+
+        in_marks.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        in_marks.setForeground(new java.awt.Color(255, 255, 255));
+        in_marks.setText("00");
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel13)
+                            .addComponent(jLabel14))
+                        .addGap(36, 36, 36)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(in_marks)
+                            .addComponent(in_quesNo)))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel12)
+                            .addComponent(jLabel11)
+                            .addComponent(jLabel10))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(in_stID)
+                            .addComponent(in_Stname)
+                            .addComponent(in_totalques))))
+                .addContainerGap(36, Short.MAX_VALUE))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(51, 51, 51)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(in_stID))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel11)
+                    .addComponent(in_Stname))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel12)
+                    .addComponent(in_totalques))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel13)
+                    .addComponent(in_quesNo))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel14)
+                    .addComponent(in_marks))
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+
+        jPanel4.setBackground(new java.awt.Color(102, 102, 102));
+
+        in_mainques.setFont(new java.awt.Font("Times New Roman", 1, 24)); // NOI18N
+        in_mainques.setForeground(new java.awt.Color(255, 255, 255));
+        in_mainques.setText("Demo Question?");
+
+        jRadioButton1.setBackground(new java.awt.Color(102, 102, 102));
+        jRadioButton1.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        jRadioButton1.setForeground(new java.awt.Color(255, 255, 255));
+        jRadioButton1.setText("jRadioButton1");
+        jRadioButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton1ActionPerformed(evt);
+            }
+        });
+
+        jRadioButton2.setBackground(new java.awt.Color(102, 102, 102));
+        jRadioButton2.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        jRadioButton2.setForeground(new java.awt.Color(255, 255, 255));
+        jRadioButton2.setText("jRadioButton2");
+        jRadioButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton2ActionPerformed(evt);
+            }
+        });
+
+        jRadioButton3.setBackground(new java.awt.Color(102, 102, 102));
+        jRadioButton3.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        jRadioButton3.setForeground(new java.awt.Color(255, 255, 255));
+        jRadioButton3.setText("jRadioButton3");
+        jRadioButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton3ActionPerformed(evt);
+            }
+        });
+
+        jRadioButton4.setBackground(new java.awt.Color(102, 102, 102));
+        jRadioButton4.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        jRadioButton4.setForeground(new java.awt.Color(255, 255, 255));
+        jRadioButton4.setText("jRadioButton4");
+        jRadioButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton4ActionPerformed(evt);
+            }
+        });
+
+        jButton2.setBackground(new java.awt.Color(0, 204, 51));
+        jButton2.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        jButton2.setForeground(new java.awt.Color(255, 255, 255));
+        jButton2.setText("Submit");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        jButton1.setBackground(new java.awt.Color(102, 102, 102));
+        jButton1.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
+        jButton1.setText("Next");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton2)
+                .addGap(103, 103, 103))
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(175, 175, 175)
+                        .addComponent(jButton1))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(221, 221, 221)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jRadioButton2)
+                            .addComponent(jRadioButton1)
+                            .addComponent(jRadioButton3)
+                            .addComponent(jRadioButton4)))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(36, 36, 36)
+                        .addComponent(in_mainques, javax.swing.GroupLayout.PREFERRED_SIZE, 783, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGap(67, 67, 67)
+                .addComponent(in_mainques)
+                .addGap(26, 26, 26)
+                .addComponent(jRadioButton1)
+                .addGap(18, 18, 18)
+                .addComponent(jRadioButton2)
+                .addGap(18, 18, 18)
+                .addComponent(jRadioButton3)
+                .addGap(18, 18, 18)
+                .addComponent(jRadioButton4)
+                .addGap(71, 71, 71)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2))
+                .addContainerGap(27, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(103, Short.MAX_VALUE))
+        );
+
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+
+        pack();
+        setLocationRelativeTo(null);
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+            int a=JOptionPane.showConfirmDialog(null, "Do you really want to submit??","Select",JOptionPane.YES_NO_OPTION);
+            if (a==0){
+            answerCheck();
+            submit();
+            }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        
+        answerCheck();
+        question();
+
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
+        // TODO add your handling code here:
+        if(jRadioButton1.isSelected()){
+            jRadioButton2.setSelected(false);
+            jRadioButton3.setSelected(false);
+            jRadioButton4.setSelected(false);
+        }
+    }//GEN-LAST:event_jRadioButton1ActionPerformed
+
+    private void jRadioButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton3ActionPerformed
+        // TODO add your handling code here:
+         if(jRadioButton3.isSelected()){
+            jRadioButton2.setSelected(false);
+            jRadioButton1.setSelected(false);
+            jRadioButton4.setSelected(false);
+        }
+    }//GEN-LAST:event_jRadioButton3ActionPerformed
+
+    private void jRadioButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton2ActionPerformed
+        // TODO add your handling code here:
+         if(jRadioButton2.isSelected()){
+            jRadioButton1.setSelected(false);
+            jRadioButton3.setSelected(false);
+            jRadioButton4.setSelected(false);
+        }
+    }//GEN-LAST:event_jRadioButton2ActionPerformed
+
+    private void jRadioButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton4ActionPerformed
+        // TODO add your handling code here:
+         if(jRadioButton4.isSelected()){
+            jRadioButton2.setSelected(false);
+            jRadioButton3.setSelected(false);
+            jRadioButton1.setSelected(false);
+        }
+    }//GEN-LAST:event_jRadioButton4ActionPerformed
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+      try{
+          UIManager.setLookAndFeel(new FlatDarculaLaf());
+         
+          
+      
+      }catch(Exception e){
+          e.printStackTrace();}
+        
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new main_quiz().setVisible(true);
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel in_Stname;
+    private javax.swing.JLabel in_date;
+    private javax.swing.JLabel in_mainques;
+    private javax.swing.JLabel in_marks;
+    private javax.swing.JLabel in_min;
+    private javax.swing.JLabel in_quesNo;
+    private javax.swing.JLabel in_sec;
+    private javax.swing.JLabel in_stID;
+    private javax.swing.JLabel in_totalques;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JRadioButton jRadioButton1;
+    private javax.swing.JRadioButton jRadioButton2;
+    private javax.swing.JRadioButton jRadioButton3;
+    private javax.swing.JRadioButton jRadioButton4;
+    private javax.swing.JSeparator jSeparator1;
+    // End of variables declaration//GEN-END:variables
+}
